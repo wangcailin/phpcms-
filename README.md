@@ -26,3 +26,34 @@
      {/pc}
 </ul>
 ```
+
+### 面包屑导航
+
+```php
+当前位置：首页 &gt; {catpos($catid)}
+```
+
+### 左侧导航
+```php
+<div class="side-column">
+<ul>
+{pc:content action="category" catid="$top_parentid" num="6" siteid="$siteid" order="listorder ASC"}
+    {if $data}
+        {loop $data $r}
+        <li {if $catid==$r[catid] || $top_parentid==$r[catid]} class="active"{/if}><a href="{$r[url]}">{$r[catname]}</a></li>
+        {/loop}
+    {else}
+        <li class=""><a href="{$CATEGORYS[$catid][url]}">{$CATEGORYS[$catid][catname]}</a></li>
+    {/if}
+{/pc}
+</ul>
+</div>
+```
+
+
+### 当前栏目banner
+
+```php
+<img class="" src="{$CATEGORYS[$catid][image]}" alt="">
+```
+
