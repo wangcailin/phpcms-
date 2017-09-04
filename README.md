@@ -56,4 +56,9 @@
 ```php
 <img class="" src="{$CATEGORYS[$catid][image]}" alt="">
 ```
-
+### 多图字段调用
+```php
+{loop string2array($r['images']) $pic_k $v} 
+<li><img src="{$v[url]}" alt="{$v[alt]}"></li>   
+{/loop}
+```
