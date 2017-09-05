@@ -13,17 +13,34 @@
             <li><a class="<?php if($r[catid]==$catid||$r[catid]==$CATEGORYS[$parentid][catid]) echo 'active'; ?>" href="{$s[url]}">{$r[catname]}</a></li>
           {/loop}
           {/pc}
-        {elseif $r[catid]==17}
-          {pc:content action="category" catid="17" num="1" siteid="$siteid" order="listorder ASC" return="tmp"}
-            {loop $tmp $s}
-              <li><a class="<?php if($r[catid]==$catid||$r[catid]==$CATEGORYS[$parentid][catid]) echo 'active'; ?>" href="{$s[url]}">{$r[catname]}</a></li>
-            {/loop}
-            {/pc}
         {else}
            <li><a class="<?php if($r[catid]==$catid||$r[catid]==$CATEGORYS[$parentid][catid]) echo 'active'; ?>" href="{$r[url]}">{$r[catname]}</a></li>
         {/if}
      {/loop}
      {/pc}
+</ul>
+```
+
+### 循环二三级导航
+```php
+<ul>  
+{pc:content action="category" catid="0" num="12" siteid="$siteid" order="listorder ASC"}  
+{loop $data $c}  
+<li><a href="{$c['url']}">{$c['catname']}</a>  
+    <ul>  
+    {loop subcat($c['catid']) $c2}  
+        <li><a href="{$c2['url']}">{$c2['catname']}</a>  
+            <ul>  
+                {loop subcat($c2['catid']) $c3}  
+                    <li><a href="{$c2['url']}">{$c3['catname']}</a></li>  
+                {/loop}  
+            </ul>
+         </li>
+      {/loop}
+    </ul>
+</li>
+{/loop}  
+{/pc}  
 </ul>
 ```
 
