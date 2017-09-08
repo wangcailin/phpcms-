@@ -69,9 +69,18 @@
 
 ### 单页左侧导航
 ```
-{loop $arrchild_arr $cid}
-    <li{if $catid==$cid} class="cur"{/if}><a href="{$CATEGORYS[$cid][url]}">{$CATEGORYS[$cid][catname]}</a></li>
-{/loop}
+<div class="about-left">
+    <div class="about-left-nav">
+    	<div class="about-left-list">
+			<p class="active">{$CATEGORYS[$parentid][catname]}<i class="second-icon"><img src="/static/images/bottom.png" alt=""></i></p>
+		    <ul>
+			   {loop $arrchild_arr $cid}
+	                <li><a {if $catid==$cid} class="left-nav-active"{/if} href="{$CATEGORYS[$cid][url]}">{$CATEGORYS[$cid][catname]}</a></li>
+				{/loop}
+		    </ul>
+		 </div>
+    </div>
+</div>
 ```
 
 
