@@ -83,6 +83,29 @@
 </div>
 ```
 
+### 三四级左侧导航
+```php
+<div class="about-left">
+    <div class="about-left-nav">
+    	{pc:content action="category" catid="$top_parentid" num="12" siteid="$siteid" order="listorder ASC"}  
+		{loop $data $c}
+    	<div class="about-left-list">
+	    		<p {if $parentid==$c[catid]} class="active"{/if}>{$c[catname]}<i class="second-icon"><img src="/static/images/bottom.png" alt=""></i></p>
+			    <ul>
+			    {pc:content action="category" catid="$c[catid]" num="12" siteid="$siteid" order="listorder ASC"}  
+				{loop $data $c}
+			    		<li><a href="{$c['url']}" {if $catid==$c[catid] || $top_parentid==$c[catid]} class="left-nav-active"{/if}>{$c['catname']}</a></li>
+			    {/loop}
+			    {/pc}
+			    </ul>
+		 </div>
+	    {/loop}
+	    {/pc}
+    </div>
+</div>
+
+```
+
 
 ### 当前栏目banner
 
