@@ -67,6 +67,13 @@
 </div>
 ```
 
+### 单页左侧导航
+```
+{loop $arrchild_arr $cid}
+    <li{if $catid==$cid} class="cur"{/if}><a href="{$CATEGORYS[$cid][url]}">{$CATEGORYS[$cid][catname]}</a></li>
+{/loop}
+```
+
 
 ### 当前栏目banner
 
