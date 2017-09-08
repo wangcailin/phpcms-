@@ -118,3 +118,9 @@
 <li><img src="{$v[url]}" alt="{$v[alt]}"></li>   
 {/loop}
 ```
+
+### 解析多附件地址
+```php
+{php $a = string2array($r[video]);}
+{php var_dump($a[0][fileurl])}
+```
