@@ -21,6 +21,33 @@
 </ul>
 ```
 
+### 默认子导航链接
+```php
+{pc:content action="category" catid="0" num="25" siteid="$siteid" order="listorder ASC"}
+ {loop $data $r}
+{if $r[catid]==9}
+  {pc:content action="category" catid="9" num="1" siteid="$siteid" order="listorder ASC" return="tmp"}
+  {loop $tmp $s}
+    <li class="<?php if($r[catid]==$catid||$r[catid]==$CATEGORYS[$parentid][catid]) echo 'active'; ?>" ><a href="{$s[url]}">{$r[catname]}</a></li>
+  {/loop}
+  {/pc}
+    {elseif $r[catid]==10}
+      {pc:content action="category" catid="10" num="1" siteid="$siteid" order="listorder ASC" return="tmp"}
+      {loop $tmp $s}
+      {pc:content action="category" catid="$s[catid]" num="1" siteid="$siteid" order="listorder ASC" return="tmp"}
+      {loop $tmp $s}
+	<li class="<?php if($r[catid]==$catid||$r[catid]==$CATEGORYS[$top_parentid][catid]) echo 'active'; ?>" ><a href="{$s[url]}">{$r[catname]}</a></li>
+      {/loop}
+      {/pc}
+      {/loop}
+      {/pc}
+    {else}
+	     <li class="<?php if($r[catid]==$catid||$r[catid]==$CATEGORYS[$parentid][catid]) echo 'active'; ?>"><a href="{$r[url]}">{$r[catname]}</a></li>
+    {/if}
+ {/loop}
+ {/pc}
+```
+
 ### 循环二三级导航
 ```php
 <ul>  
