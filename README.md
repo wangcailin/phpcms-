@@ -84,10 +84,18 @@ function catpos($catid, $symbol=' > '){
 	$pos = '';
 	$siteurl = siteurl($category_arr[$catid]['siteid']);
 	$arrparentid = array_filter(explode(',', $category_arr[$catid]['arrparentid'].','.$catid));
+
+	$lenght = sizeof($arrparentid);
+	$i=1;
 	foreach($arrparentid as $catid) {
 		$url = $category_arr[$catid]['url'];
 		if(strpos($url, '://') === false) $url = $siteurl.$url;
-		$pos .= '<a href="'.$url.'">'.$category_arr[$catid]['catname'].'</a>'.$symbol;
+		if($lenght<=$i){
+			$pos .= '<span>'.$category_arr[$catid]['catname'].'</span>';
+		}else{
+			$pos .= $category_arr[$catid]['catname'].$symbol;
+		}
+		$i++;
 	}
 	return $pos;
 }
