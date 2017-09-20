@@ -75,6 +75,22 @@
 
 ```php
 当前位置：首页 &gt; {catpos($catid)}
+function catpos($catid, $symbol=' > '){
+	$category_arr = array();
+	$siteids = getcache('category_content','commons');
+	$siteid = $siteids[$catid];
+	$category_arr = getcache('category_content_'.$siteid,'commons');
+	if(!isset($category_arr[$catid])) return '';
+	$pos = '';
+	$siteurl = siteurl($category_arr[$catid]['siteid']);
+	$arrparentid = array_filter(explode(',', $category_arr[$catid]['arrparentid'].','.$catid));
+	foreach($arrparentid as $catid) {
+		$url = $category_arr[$catid]['url'];
+		if(strpos($url, '://') === false) $url = $siteurl.$url;
+		$pos .= '<a href="'.$url.'">'.$category_arr[$catid]['catname'].'</a>'.$symbol;
+	}
+	return $pos;
+}
 ```
 
 ### 左侧导航
