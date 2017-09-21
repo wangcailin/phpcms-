@@ -289,11 +289,6 @@ PHPCMS的中文语言定义文件。
 加入新建字段的名称
 $LANG['contacts'] = 'Contacts'; //联系方式
 $LANG['contacts_address'] = 'Address';//地址
-$LANG['contacts_phone'] = 'Phone';//电话
-$LANG['contacts_mobile'] = 'Mobile';//手机
-$LANG['contacts_email'] = 'Email';//邮箱
-$LANG['contacts_qq'] = 'QQ';//QQ
-$LANG['contacts_beian'] = 'Beian';//备案
 同样打开\phpcms\languages\en\admin.lang.php 
 加入英文名称。
 
@@ -309,26 +304,6 @@ $LANG['contacts_beian'] = 'Beian';//备案
     <th width="80"><?php echo L('contacts_address')?>：</th>
     <td class="y-bg"><input type="text" class="input-text" name="contacts_address" id="contacts_address" size="30" /></td>
   </tr>
-  <tr>
-    <th><?php echo L('contacts_phone')?>：</th>
-    <td class="y-bg"><input type="text" class="input-text" name="contacts_phone" id="contacts_phone" size="30" /></td>
-  </tr>
-    <tr>
-    <th><?php echo L('contacts_mobile')?>：</th>
-    <td class="y-bg"><input type="text" class="input-text" name="contacts_mobile" id="contacts_mobile" size="30" /></td>
-  </tr>
-<tr>
-    <th><?php echo L('contacts_email')?>：</th>
-    <td class="y-bg"><input type="text" class="input-text" name="contacts_email" id="contacts_email" size="30" /></td>
-  </tr>
-<tr>
-    <th><?php echo L('contacts_qq')?>：</th>
-    <td class="y-bg"><input type="text" class="input-text" name="contacts_qq" id="contacts_qq" size="30" /></td>
-  </tr>
-<tr>
-    <th><?php echo L('contacts_beian')?>：</th>
-    <td class="y-bg"><input type="text" class="input-text" name="contacts_beian" id="contacts_beian" size="30" /></td>
-  </tr>
 </table>
 </fieldset>
 3
@@ -341,12 +316,7 @@ $LANG['contacts_beian'] = 'Beian';//备案
 查找“$default_style”
 在下面新建一行，加入字段获取代码：
 $contacts_address = isset($_POST['contacts_address']) && trim($_POST['contacts_address']) ? trim($_POST['contacts_address']) : '';
-$contacts_phone = isset($_POST['contacts_phone']) && trim($_POST['contacts_phone']) ? trim($_POST['contacts_phone']) : '';
-$contacts_mobile = isset($_POST['contacts_mobile']) && trim($_POST['contacts_mobile']) ? trim($_POST['contacts_mobile']) : '';
-$contacts_email = isset($_POST['contacts_email']) && trim($_POST['contacts_email']) ? trim($_POST['contacts_email']) : '';
-$contacts_qq = isset($_POST['contacts_qq']) && trim($_POST['contacts_qq']) ? trim($_POST['contacts_qq']) : '';
-$contacts_beian = isset($_POST['contacts_beian']) && trim($_POST['contacts_beian']) ? trim($_POST['contacts_beian']) : '';
-查找“=>$default_style”在后面加入',contacts_address'=>$contacts_address,'contacts_phone'=>$contacts_phone,'contacts_mobile'=>$contacts_mobile,'contacts_email'=>$contacts_email,'contacts_qq'=>$contacts_qq,'contacts_beian'=>$contacts_beian)
+查找“=>$default_style”在后面加入'contacts_address'=>$contacts_address)
 同样的在"edit()”函数里面
 加入更新字段的代码
 然后在修改数据库
@@ -354,11 +324,4 @@ $contacts_beian = isset($_POST['contacts_beian']) && trim($_POST['contacts_beian
 v9_site
 在数据表结构新建以下字段
 contacts_address varchar(100)
-contacts_phone varchar(30)
-contacts_mobile varchar(30)
-contacts_email varchar(30)
-contacts_qq varchar(30)
-contacts_qq varchar(30)
-contacts_beian varchar(30)
-然后保存
 ```
