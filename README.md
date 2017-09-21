@@ -175,3 +175,45 @@ function catpos($catid, $symbol=' > '){
 {php $a = string2array($r[video]);}
 {php var_dump($a[0][fileurl])}
 ```
+
+### 自定义分页
+```php
+phpcms\libs\functions\global.func.php这个文件，找到分页函数，复制一下，粘贴到默认分页函数的下面，重新命名，比如我的就命名为wz_pages，保存。
+打开
+phpcms/libs/classes/template_cache.class.php，找到207行的
+$str .= '$pages = pages($'.$op.'_total, $page, $pagesize, $urlrule);';
+在这行的下面加上
+$str .= '$wz_pages = wz_pages($'.$op.'_total, $page, $pagesize, $urlrule);';
+保存。
+
+最后，如果你要使用你自定义的分页函数，那么在模板中直接用{$wz_pages}就可以了、、
+
+以后要修改样式，直接修改
+phpcms\libs\functions\global.func.php这个文件中的wz_pages函数就可以了，不会影响到后台
+
+打开
+phpcms/libs/classes/template_cache.class.php，找到178行的
+$str .= '$r = $get_db->sql_query("'.$sql.'");$s = $get_db->fetch_next();$pages=pages($s[\'count\'], $page, $pagesize, $urlrule);';
+在他下面增加：
+$str .= '$r = $get_db->sql_query("'.$sql.'");$s = $get_db->fetch_next();$wz_pages=wz_pages($s[\'count\'], $page, $pagesize, $urlrule);';
+
+再次后续优化：
+有朋友提到，会员中心的收藏列表分页不能使用上面的办法。
+因为收藏列表的分页函数直接在其他文件定好了，所以通过修改模板缓存文件是不可行的
+下面提供修改办法：
+具体是
+phpcms\libs\classes\model.class.php  61行
+$this->pages = pages($this->number, $page, $pagesize, $urlrule, $array, $setpages);
+把上面这行修改成：
+$this->pages = wz_pages($this->number, $page, $pagesize, $urlrule, $array, $setpages);
+(模板中的{$pages}不用改为{$wz_pages})
+上面是第一种办法。
+不过这样子的话，可能后台也会影响到了，这个地方好像是控制好多地方的
+也可以这样修改，还是上面那个文件，61行不要修改。直接在61行下面添加：
+$this->wz_pages= wz_pages($this->number, $page, $pagesize, $urlrule, $array, $setpages);
+再去到：phpcms\modules\member\index.php 718行
+把 $pages = $this->favorite_db->pages;
+修改为：
+$wz_pages = $this->favorite_db->wz_pages;
+模板中的{$pages}要修改为{$wz_pages}
+```
