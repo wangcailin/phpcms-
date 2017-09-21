@@ -178,20 +178,25 @@ function catpos($catid, $symbol=' > '){
 
 ### 自定义分页
 ```php
-phpcms\libs\functions\global.func.php这个文件，
+phpcms\libs\functions\global.func.php这个文件，新建wx_pages分页函数
 phpcms/libs/classes/template_cache.class.php，找到207行的
 $str .= '$pages = pages($'.$op.'_total, $page, $pagesize, $urlrule);';
 在这行的下面加上
 $str .= '$wz_pages = wz_pages($'.$op.'_total, $page, $pagesize, $urlrule);';
-phpcms\libs\functions\global.func.php这个文件中的wz_pages函数就可以了，不会影响到后台
+
 phpcms/libs/classes/template_cache.class.php，找到178行的
 $str .= '$r = $get_db->sql_query("'.$sql.'");$s = $get_db->fetch_next();$pages=pages($s[\'count\'], $page, $pagesize, $urlrule);';
 在他下面增加：
 $str .= '$r = $get_db->sql_query("'.$sql.'");$s = $get_db->fetch_next();$wz_pages=wz_pages($s[\'count\'], $page, $pagesize, $urlrule);';
+
 会员中心的收藏列表分页：
 phpcms\libs\classes\model.class.php  61行
 $this->pages = pages($this->number, $page, $pagesize, $urlrule, $array, $setpages);
 把上面这行修改成：
 $this->pages = wz_pages($this->number, $page, $pagesize, $urlrule, $array, $setpages);
 (模板中的{$pages}不用改为{$wz_pages})
+
+前台调用：
+wx_page="$page"
+{$$wz_pages}
 ```
