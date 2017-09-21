@@ -200,3 +200,85 @@ $this->pages = wz_pages($this->number, $page, $pagesize, $urlrule, $array, $setp
 wx_page="$page"
 {$$wz_pages}
 ```
+### SQL查询篇
+```php
+添加查询条件
+{php $sql5 = " pay_type_int = 24"}
+{pc:content action="lists" catid="11"   moreinfo="1"  where="$sql5"  num="1" order="listorder asc,inputtime asc" page="$page"  cache="$cachetime" }
+
+同时调用指定栏目和指定推荐位
+{pc:get sql="SELECT * FROM v9_house WHERE id IN (SELECT id FROM v9_position_data WHERE posid =2) or catid in(11,12) order by id DESC" num="7"   return="data" }
+
+同时调用两个不同表的相同字段
+{pc:get sql="(select id,title,catid,inputtime from v9_house where status = 99) union (select id,title,catid,inputtime from v9_qiugou where status = 99) ORDER BY inputtime DESC limit 7 --" return="data"}
+
+
+调用需求：文章范围为59 60 61三个栏目，并且推送到了27 和28两个推荐位；
+{pc:get sql="SELECT * FROM v9_news WHERE id IN (SELECT id FROM v9_position_data WHERE posid in(27,28) and catid in(59,60,61)) order by listorder DESC" cache="3600" start="3" num="7" return="data" }
+
+PHPCMS V9的get标签调用 
+
+1、调用本系统单条数据，示例（调用ID为1的信息，标题长度不超过25个汉字，显示更新日期）：
+{get sql="select * from phpcms_content where contentid=1" /}
+标题：{str_cut($r[title], 50)} URL：{$r[url]} 更新日期：{date('Y-m-d', $r[updatetime])} 
+2、调用本系统多条数据，示例（调用栏目ID为1通过审核的10条信息，标题长度不超过25个汉字，显示更新日期）：
+{get sql="select * from phpcms_content where catid=1 and status=99 order by updatetime desc" rows="10"}
+     标题：{str_cut($r[title], 50)} URL：{$r[url]} 更新日期：{date('Y-m-d', $r[updatetime])}
+{/get}
+3、带分页，示例（调用栏目ID为1通过审核的10条信息，标题长度不超过25个汉字，显示更新日期，带分页）：
+{get sql="select * from phpcms_content where catid=1 and status=99 order by updatetime desc" rows="10" page="$page"}
+     标题：{str_cut($r[title], 50)} URL：{$r[url]} 更新日期：{date('Y-m-d', $r[updatetime])}
+{/get}
+分页：{$pages}
+4、自定义返回变量，示例（调用栏目ID为1通过审核的10条信息，标题长度不超过25个汉字，显示更新日期，返回变量为 $v）：
+{get sql="select * from phpcms_content where catid=1 and status=99 order by updatetime desc" rows="10" return="v"}
+     标题：{str_cut($v[title], 50)} URL：{$v[url]} 更新日期：{date('Y-m-d', $v[updatetime])} 
+{/get}
+5、调用同一帐号下的其他数据库，示例（调用数据库为bbs，分类ID为1的10个最新主题，主题长度不超过25个汉字，显示更新日期）：
+{get dbname="bbs" sql="select * from cdb_threads where fid=1 order by dateline desc" rows="10"}
+     主题：{str_cut($r[subject], 50)} URL：http://bbs.phpcms.cn/viewthread.php?tid={$r[tid]} 更新日期：{date('Y-m-d', $r[dateline])} 
+{/get}
+6、调用外部数据，示例（调用数据源为bbs，分类ID为1的10个最新主题，主题长度不超过25个汉字，显示更新日期）：
+{get dbsource="bbs" sql="select * from cdb_threads where fid=1 order by dateline desc" rows="10"}
+     主题：{str_cut($r[subject], 50)} URL：http://bbs.phpcms.cn/viewthread.php?tid={$r[tid]} 更新日期：{date('Y-m-d', $r[dateline])} 
+{/get}
+
+
+7、当前栏目调用父级及以下栏目信息方法
+{php $arrchildid = $CATEGORYS[$CAT[parentid]][arrchildid]}
+{pc:get sql="SELECT * FROM v9_news where catid in($arrchildid) cache="3600" page="$page" num="12" return="data"}
+
+不知道有没有朋友在使用中遇到这几种方法不能满足需求的时候呢？
+例如：取出评论数最多的第3条到第10条记录，有人说我是多此一举，一般取最多评论没理由不取第一和第二条，因为PHPCMS的缩略图对4：3这样的尺寸比较好，对长条形（如3：4）的图片缩略效果不好，为了自己手动更新评论最多的第一和第二条记录，故此不想自动更新读取前两条。
+
+<ul>
+<!--{get sql="select A.contentid,A.catid,A.title,A.thumb,A.description,A.url,A.status,A.updatetime,B.contentid,B.hits,B.comments from `phpcms_content` as A INNER JOIN `phpcms_content_count` as B ON A.contentid=B.contentid and A.status=99 and LENGTH(A.thumb)>0 order by B.comments desc LIMIT 3,7"}-->
+<li><span class="xxnse_fen2">{$r[comments]}人参与评论</span>?<a href="{$r[url]}" title="{$r[title]}">{str_cut($r[title], 28)}</a></li>
+<!--{/get}-->
+</ul>
+关键点就在 order by B.comments desc LIMIT 3,7 （表示从第3条记录开始，向下读取7条数据）这个在MYSQL是经常用，我抱着试试看的想法，结果是可以的。
+phpcms V9 保留了2008的get标签的使用方法
+它包括了2种方式一种是内部数据，另一种是外部数据
+我们先分析下内部数据的使用方法
+1、内部数据的调用
+
+        {pc:get sql="SELECT * FROM `XX` WHERE  fid =$ltid AND digest =2 AND ifupload =1 ORDER BY tid DESC" num="2" cache= "3600" return="data" } 
+        {loop $data $r}
+      ｛/loop｝{/pc}
+由此可以看出  get 语句支持num的用法但是不支持 limit 5，5.这样的用法
+实在是很遗憾
+num是调用的条数
+
+2、外部数据的调用
+{ pc : get sql = "SELECT * FROM phpcms_member" cache = "3600" page = "$page" dbsource = "discuz" return = "data" }
+<ul>
+{ loop $data $key $val }
+{ $val [ username ]}< br />
+{ /loop}
+</ ul >
+{ $pages }
+{/ pc }
+一个是数据源，一个是产生的pages翻页效果
+
+
+```
