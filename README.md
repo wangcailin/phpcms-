@@ -281,6 +281,34 @@ num是调用的条数
 一个是数据源，一个是产生的pages翻页效果
 ```
 
+### phpcms添加全局自定义常量
+```php
+1:修改网站system.php配置文件
+2:修改网站base.php配置文件
+3:修改网站setting.tpl.php文件
+4:修改网站admin.lang.php文件，添加语言包
+5:修改global.func.php文件set_config函数
+
+文件路径：/caches/configs/system.php
+'chat_path' => 'tencent://message/?uin=343326675&Site=宜宾微云网络&Menu=yes', //咨询地址
+
+文件路径：/phpcms/base.php
+define('CHAT_PATH',pc_base::load_config('system','chat_path'));
+
+文件路径：/phpcms/modules/admin/templates/setting.tpl.php
+<tr>
+<th width="120"><?php echo L('setting_chat_path')?></th>
+<td class="y-bg"><input type="text" class="input-text" name="setconfig[chat_path]" id="chat_path" size="50" value="<?php echo $chat_path?>" /></td>
+</tr>
+
+文件路径：/phpcms/languages/zh-cn/admin.lang.php
+$LANG['setting_chat_path'] = '咨询地址';
+
+文件路径：phpcms/modules/admin/functions/global.func.php
+if(in_array($k,array('js_path','css_path','img_path','chat_path',))) {
+```
+
+
 ### 站点管理 自定义变量 增加备案等字段
 ```php
 打开\phpcms\languages\zh-cn\admin.lang.php 
