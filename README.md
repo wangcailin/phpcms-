@@ -401,6 +401,6 @@ foreach($_POST['listorders'] as $id => $listorder) {
       $this->db->update(array('listorder'=>$listorder),array('id'=>$id,modelid=>$modelid));
     }
    }
-//更改推荐位排序开始
+//更改推荐位排序结束
 ```
 改完这两个地方就可以正常的使用了。
