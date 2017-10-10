@@ -359,7 +359,7 @@ v9_site
 contacts_address varchar(100)
 ```
 ### v9 推荐位排序问题解决办法
-
+排序调用代码
 ```php
 {pc:content action="position" posid="1" order="listorder DESC" num="3"}
     {loop $data $r}
@@ -367,21 +367,16 @@ contacts_address varchar(100)
     {/loop}
 {/pc}
 ```
-其中order="listorder DESC"就是按照手工排序的意思。但是会发现，order="listorder DESC"效果和order="id DESC"一样，实际上没有排序降序功能，只能是ID降序或ID升序。
-解决办法。
-1.打开文件：/phpcms/modules/admin/classes/push_api.class.php
-找到：
+*. 解决办法
+1.打开文件：*/phpcms/modules/admin/classes/push_api.class.php*
 ```php
 $info['id'] = $info['listorder'] = $d['id'];
 ```
-就是这一句，当添加文章或者修改文章的时候，把listorder变得跟id一样，以至于，listorder排序不起作用。
 所以上面那句代码应该改为：
 ```php
 $info['id'] = $d['id'];
 ```
-这样一来添加文章或者修改文章的时候就不会改动listorder的值了。但单单这样还不行，因为推荐标签在取数据的时候，是根据v9_position_data表的listorder来排序的，但后台更新文章排序的时候，并没有更新v9_position_data这个表的listorder,所以得加上这个功能。
-2.打开文件：/phpcms/modules/content/content.php
-找到：
+2.打开文件：*/phpcms/modules/content/content.php*
 ```php
 foreach($_POST['listorders'] as $id => $listorder) {
       $this->db->update(array('listorder'=>$listorder),array('id'=>$id));
