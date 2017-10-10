@@ -21,6 +21,11 @@
 </ul>
 ```
 
+### 导航高亮
+```php
+{if $top_parentid == $r[catid]||$catid==$r[catid]||$parentid==$r[catid]} active{/if}
+```
+
 ### 默认子导航链接
 ```php
 {pc:content action="category" catid="0" num="25" siteid="$siteid" order="listorder ASC"}
