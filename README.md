@@ -367,8 +367,8 @@ contacts_address varchar(100)
     {/loop}
 {/pc}
 ```
-*. 解决办法
-1.打开文件：*/phpcms/modules/admin/classes/push_api.class.php*
+> 解决办法
+1. 打开文件：*/phpcms/modules/admin/classes/push_api.class.php*
 ```php
 $info['id'] = $info['listorder'] = $d['id'];
 ```
@@ -376,7 +376,7 @@ $info['id'] = $info['listorder'] = $d['id'];
 ```php
 $info['id'] = $d['id'];
 ```
-2.打开文件：*/phpcms/modules/content/content.php*
+2. 打开文件：*/phpcms/modules/content/content.php*
 ```php
 foreach($_POST['listorders'] as $id => $listorder) {
       $this->db->update(array('listorder'=>$listorder),array('id'=>$id));
