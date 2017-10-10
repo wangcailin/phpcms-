@@ -359,8 +359,7 @@ v9_site
 contacts_address varchar(100)
 ```
 ### v9 推荐位排序问题解决办法
-简介： 用phpcms做网站的时候，有些地方要用到推荐位列表，如幻灯片，特别推荐等。有时候因为文章的重要性问题，希望文章能够按照后台设置的排序号来排序。但是，phpcms这里却不好使了
-用phpcms做网站的时候，有些地方要用到推荐位列表，如幻灯片，特别推荐等。有时候因为文章的重要性问题，我希望文章能够按照后台设置的排序号来排序。这时代码应该是：
+
 ```php
 {pc:content action="position" posid="1" order="listorder DESC" num="3"}
     {loop $data $r}
@@ -369,8 +368,7 @@ contacts_address varchar(100)
 {/pc}
 ```
 其中order="listorder DESC"就是按照手工排序的意思。但是会发现，order="listorder DESC"效果和order="id DESC"一样，实际上没有排序降序功能，只能是ID降序或ID升序。
-打开数据库查看v9_position_data表，结果你会发现，表中listorder字段跟id是一样的。
-最后才找到解决的办法。
+解决办法。
 1.打开文件：/phpcms/modules/admin/classes/push_api.class.php
 找到：
 ```php
