@@ -358,3 +358,49 @@ v9_site
 在数据表结构新建以下字段
 contacts_address varchar(100)
 ```
+### v9 推荐位排序问题解决办法
+简介： 用phpcms做网站的时候，有些地方要用到推荐位列表，如幻灯片，特别推荐等。有时候因为文章的重要性问题，希望文章能够按照后台设置的排序号来排序。但是，phpcms这里却不好使了
+用phpcms做网站的时候，有些地方要用到推荐位列表，如幻灯片，特别推荐等。有时候因为文章的重要性问题，我希望文章能够按照后台设置的排序号来排序。这时代码应该是：
+```php
+{pc:content action="position" posid="1" order="listorder DESC" num="3"}
+    {loop $data $r}
+          html code
+    {/loop}
+{/pc}
+```
+其中order="listorder DESC"就是按照手工排序的意思。但是会发现，order="listorder DESC"效果和order="id DESC"一样，实际上没有排序降序功能，只能是ID降序或ID升序。
+打开数据库查看v9_position_data表，结果你会发现，表中listorder字段跟id是一样的。
+最后才找到解决的办法。
+1.打开文件：/phpcms/modules/admin/classes/push_api.class.php
+找到：
+```php
+$info['id'] = $info['listorder'] = $d['id'];
+```
+就是这一句，当添加文章或者修改文章的时候，把listorder变得跟id一样，以至于，listorder排序不起作用。
+所以上面那句代码应该改为：
+```php
+$info['id'] = $d['id'];
+```
+这样一来添加文章或者修改文章的时候就不会改动listorder的值了。但单单这样还不行，因为推荐标签在取数据的时候，是根据v9_position_data表的listorder来排序的，但后台更新文章排序的时候，并没有更新v9_position_data这个表的listorder,所以得加上这个功能。
+2.打开文件：/phpcms/modules/content/content.php
+找到：
+```php
+foreach($_POST['listorders'] as $id => $listorder) {
+      $this->db->update(array('listorder'=>$listorder),array('id'=>$id));
+}
+```
+在上面的后面加上
+```php
+//更改推荐位排序开始
+   $this->db_config = pc_base::load_config('database');
+   $tablepre = $this->db_config['default']['tablepre'];
+   $this->db->table_name = $tablepre."position_data";
+   foreach($_POST['listorders'] as $id => $listorder) {
+    $r = $this->db->get_one(array('id'=>$id));
+    if($r['posid']){
+      $this->db->update(array('listorder'=>$listorder),array('id'=>$id,modelid=>$modelid));
+    }
+   }
+//更改推荐位排序开始
+```
+改完这两个地方就可以正常的使用了。
