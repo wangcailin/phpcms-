@@ -397,3 +397,40 @@ foreach($_POST['listorders'] as $id => $listorder) {
 //更改推荐位排序结束
 ```
 改完这两个地方就可以正常的使用了。
+
+
+### 网站建设中常见的信息修改，版权、后台登陆、屏锁、官方网站、授权、支持论坛、等信息
+修改 屏锁、官方网站、授权、支持论坛、等信息
+找到 /phpcms/modules/admin/templates/index.tpl.php 文件
+删除a连接的部分就可以了
+Phpcms后台登陆后的页面修改
+Phpcms->modules->admin->templates->main.tpl.php
+1. 安全提示部分
+```
+<h6><?php echo L('main_safety_tips')?></h6>
+```
+2. 授权信息
+```
+<h6><?php echo L('main_license')?></h6>
+```
+3. 团队部分
+```
+<h6><?php echo L('main_product_team')?></h6>
+```
+4. 系统信息部分
+```
+<h6><?php echo L('main_sysinfo')?></h6>
+```
+5. 快捷方式部分
+```
+<h6><?php echo L('main_shortcut')?></h6>
+```
+6. 个人信息部分
+```
+<h6><?php echo L('personal_information')?></h6>
+```
+ 
+如果要集成其他页面到这个页面下，可以使用
+```
+isset($_COOKIE['Okxll_admin_username'])和isset($_COOKIE['Okxll_userid'])来验证权限
+```
