@@ -181,6 +181,14 @@ function catpos($catid, $symbol=' > '){
 {php var_dump($a[0][fileurl])}
 ```
 
+### 列表页调用
+```php
+{pc:content action="lists" catid="$catid" num="25" order="id DESC" page="$page"}
+{loop $data $r}
+{/loop}
+{/pc}
+```
+
 ### 自定义分页
 ```php
 phpcms\libs\functions\global.func.php这个文件，新建wx_pages分页函数
